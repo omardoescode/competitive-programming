@@ -5,15 +5,15 @@ using namespace std;
 
 namespace number_thoery {
 // O(sqrt(n))
-void find_divisors(ll num, vector<ll> &res) {
+void find_divisors_unsorted(ll num, vector<ll> &res) {
   res.clear();
 
   ll i;
   for (i = 1; i * i < num; i++)
-    if (num % i)
+    if (num % i == 0)
       res.push_back(i), res.push_back(num / i);
 
-  if (num % i)
+  if (i * i == num)
     res.push_back(i);
 }
 
