@@ -17,6 +17,19 @@ void find_divisors_unsorted(ll num, vector<ll> &res) {
     res.push_back(i);
 }
 
+// NOTE: A number has an even number of divisors unless if it's a square root
+int count_divisors(int value) {
+  int sum = 0;
+  int i;
+  for (i = 1; i * i < value; i++)
+    if (value % i == 0)
+      sum += 2;
+
+  if (i * i == value)
+    sum += 1;
+
+  return sum;
+}
 // O(sqrt(n))
 void prime_factorization(long num, vector<ll> &res) {
   res.clear();
