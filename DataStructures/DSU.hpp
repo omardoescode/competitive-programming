@@ -1,26 +1,59 @@
 
+#include <algorithm>
+#include <cassert>
 #include <cstdlib>
 #include <ctime>
+#include <numeric>
 #include <vector>
 using namespace std;
-// UpdateByHeight
+
 class DSU {
 public:
-  DSU(int n) : _arr(n, -1), _sz(n, 1) {}
+  DSU(size_t size) : count(0), _par(size), _rank(size) {}
 
-  void unionSets(int root0, int root1) {
-    int r0 = find(root0);
-    int r1 = find(root1);
-    if (r0 == r1)
-      return;
-    if (_sz[r0] < _sz[r1])
-      swap(r0, r1);
-    _sz[r1] += _sz[r0];
+  void reInit(size_t size) {
+    _par.resize(size);
+    _rank.resize(size);
+    count = 0;
   }
 
-  int find(int a) { return _arr[a] < 0 ? a : _arr[a] = find(_arr[a]); }
+  void make_set(int v) {
+    _par[v] = v;
+    _rank[v] = 0;
+    count++;
+  }
+
+  /**
+  * Without Path Compression
+   int find_set(int v) {
+    if (v == _par[v])
+      return v;
+    return find_set(_par[v]);
+  }
+  */
+  int find_set(int v) {
+    if (v == _par[v])
+      return v;
+    return _par[v] = find_set(_par[v]);
+  }
+
+  void union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+
+    count--;
+    if (a != b) {
+      if (_rank[a] < _rank[b])
+        swap(a, b);
+      _par[b] = a;
+      if (_rank[a] == _rank[b])
+        _rank[a]++;
+    }
+
+    assert(count >= 0); // just to help in debugging
+  }
 
 private:
-  std::vector<int> _arr;
-  std::vector<int> _sz;
+  vector<int> _par, _rank;
+  int count;
 };
