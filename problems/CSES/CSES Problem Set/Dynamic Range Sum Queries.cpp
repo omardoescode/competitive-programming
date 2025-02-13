@@ -5,6 +5,7 @@
  * My Github: https://github.com/omardoescode/
  */
 #include "bits/stdc++.h"
+#include <utility>
 
 using namespace std;
 
@@ -16,7 +17,8 @@ using namespace std;
 #define pdi pair<double, int>
 #define pii pair<int, int>
 #define pdd pair<double, double>
-#define int long long
+#define int ll
+#define endl "\n"
 #define in(a)                                                                  \
   int a;                                                                       \
   cin >> a;
@@ -42,85 +44,43 @@ using namespace std;
 #define vecll vector<ll>
 #define all(v) v.begin(), v.end()
 
-class DSU {
-public:
-  DSU(size_t size) : count(size), _par(size), _rank(size) {
-    for (int i = 0; i < size; i++) {
-      _par[i] = i;
-      _rank[i] = 0;
-    }
-  }
-
-  void reInit(size_t size) {
-    _par.resize(size);
-    _rank.resize(size);
-    count = 0;
-  }
-
-  /**
-  * Without Path Compression
-   int find_set(int v) {
-    if (v == _par[v])
-      return v;
-    return find_set(_par[v]);
-  }
-  */
-  int find_set(int v) {
-    if (v == _par[v])
-      return v;
-    return _par[v] = find_set(_par[v]);
-  }
-
-  // return true if they weren't unioned
-  bool union_sets(int a, int b) {
-    a = find_set(a);
-    b = find_set(b);
-
-    if (a != b) {
-      if (_rank[a] < _rank[b])
-        swap(a, b);
-      _par[b] = a;
-      if (_rank[a] == _rank[b])
-        _rank[a]++;
-      count--;
-      // assert(count >= 0); // just to help in debugging
-      return true;
-    }
-    return false;
-  }
-
-  int get_count() const { return count; }
-
-private:
-  vector<int> _par, _rank;
-  int count;
-};
-
 void precompute() {}
 
 void solve() {
-  in(n);
-  DSU d(n);
-  vec<pii> uneeded;
-  for (int i = 0; i < n - 1; i++) {
-    in2(a, b);
-    a--, b--;
-    if (!d.union_sets(a, b))
-      uneeded.emplace_back(a, b);
+  in2(n, q);
+  int sq = sqrt(n);
+  vec<int> arr(n);
+  vec<int> sum(n);
+
+  for (int i = 0; i < n; i++) {
+    cin >> arr[i];
+    sum[i / sq] += arr[i];
   }
 
-  cout << d.get_count() - 1 << endl;
-  int cnt = d.get_count();
-  int k = 0;
+  while (q--) {
+    in3(type, a, b);
 
-  for (int i = 0; i < n && cnt != 1; i++) {
-    for (int j = i + 1; j < n && cnt != 1; j++) {
-      if (d.find_set(i) != d.find_set(j)) {
-        d.union_sets(i, j);
-        cout << uneeded[k].first + 1 << " " << uneeded[k].second + 1 << " "
-             << i + 1 << " " << j + 1 << endl;
-        cnt--, k++;
+    if (type == 1) {
+      a--;
+      sum[a / sq] -= arr[a];
+      arr[a] = b;
+      sum[a / sq] += b;
+    } else if (type == 2) {
+      a--, b--;
+      int sb = a / sq, eb = b / sq;
+      int res = 0;
+      if (sb == eb)
+        for (int i = a; i <= b; i++)
+          res += arr[i];
+      else {
+        for (int i = a; i < (sb + 1) * sq; i++)
+          res += arr[i];
+        for (int i = sb + 1; i < eb; i++)
+          res += sum[i];
+        for (int i = eb * sq; i <= b; i++)
+          res += arr[i];
       }
+      cout << res << endl;
     }
   }
 }
@@ -128,7 +88,7 @@ void solve() {
 signed main() {
   FASTIO;
   // #ifndef ONLINE_JUDGE
-  //   freopen("input.txt", "r", stdin);
+  // freopen("input.txt", "r", stdin);
   //   // freopen("output.txt", "w", stdout);
   // #endif
   int t = 1, c = 0;
