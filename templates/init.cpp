@@ -25,7 +25,6 @@ using namespace std;
 #define pii pair<int, int>
 #define pdd pair<double, double>
 #define endl "\n"
-#define int long long
 #define in(a)                                                                  \
   int a;                                                                       \
   cin >> a;
@@ -46,10 +45,17 @@ using namespace std;
   ios_base::sync_with_stdio(false);                                            \
   cin.tie(NULL)
 
-#define vec vector
-#define veci vector<int>
-#define vecll vector<ll>
-#define all(v) v.begin(), v.end()
+#define v vector
+#define vvi vector<vector<int>>
+#define vvl vector<vector<long long>>
+#define vi vector<int>
+#define vll vector<ll>
+#define all(v) (v).begin(), (v).end()
+
+#define for0(i, n) for (int i = 0; i < n; i++)
+#define for1(i, n) for (int i = 1; i <= n; i++)
+#define __lcm(a, b) ((a * b) / (__gcd(a, b)))
+#define unq(v) (v).erase(unique(all((v)), (v).end()))
 
 void precompute() {}
 
